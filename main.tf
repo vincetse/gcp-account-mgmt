@@ -1,11 +1,9 @@
 provider "google-beta" {
-  project = "focus-beacon-265714"
   region  = "us-central1"
   zone    = "us-central1-c"
 }
 
 provider "google" {
-  project = "focus-beacon-265714"
   region  = "us-central1"
   zone    = "us-central1-c"
 }
@@ -72,19 +70,26 @@ output "project1_id" {
 
 #################################################################################
 ## webapp with postgresql
-#resource "google_sql_database_instance" "app1_db" {
-#  name = "db1"
-#  database_version = "MYSQL_5_7"
-#  region = "us-central"
-#  project = module.project1.project_id
-#  settings {
-#    tier = "db-f1-micro"
-#  }
-#}
-#
-#resource "google_sql_database" "app1_db" {
-#  name = "app1-db"
-#  instance = google_sql_database_instance.app1_db.name
-#}
-#
-#
+resource "google_sql_database_instance" "app1_db" {
+  name = "db1"
+  database_version = "MYSQL_5_7"
+  region = "us-central"
+  project = module.project1.project_id
+  settings {
+    tier = "db-f1-micro"
+  }
+
+  depends_on = [
+    module.project1
+  ]
+}
+
+resource "google_sql_database" "app1_db" {
+  name = "app1-db"
+  instance = google_sql_database_instance.app1_db.name
+  project = module.project1.project_id
+
+  depends_on = [
+    module.project1
+  ]
+}
