@@ -16,6 +16,10 @@ data "google_organization" "org" {
 
 ################################################################################
 # Billing
+#
+# Create multiple Billing Accounts by department so that we can track spend
+# by department, or even by product.  Projects then get assigned a billing
+# account so that spend isn't conflated into one big bucket.
 data "google_billing_account" "free_trial" {
   display_name = "Free Trial"
   open         = true
@@ -46,6 +50,8 @@ resource "google_folder" "sandbox" {
 
 ################################################################################
 # project
+#
+# Create a project by product, and assign it to the relevant Billing Account.
 module "project1" {
   source             = "./modules/project"
   project_name       = "My GAE"
