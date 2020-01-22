@@ -1,12 +1,13 @@
 resource "random_id" "project_id" {
-  prefix = "${var.project_id_prefix}-"
+  prefix      = "${var.project_id_prefix}-"
   byte_length = 4
 }
 
 resource "google_project" "proj" {
-  name       = var.project_name
-  project_id = random_id.project_id.dec
-  folder_id  = var.parent_id
+  name            = var.project_name
+  project_id      = random_id.project_id.dec
+  folder_id       = var.parent_id
+  billing_account = var.billing_account_id
 }
 
 resource "google_project_iam_binding" "readwrite" {
