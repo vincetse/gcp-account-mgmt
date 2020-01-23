@@ -68,28 +68,24 @@ output "project1_id" {
   value = module.project1.project_id
 }
 
-#################################################################################
-## webapp with postgresql
-resource "google_sql_database_instance" "app1_db" {
-  name = "db1"
+################################################################################
+# webapp with postgresql
+module "db1" {
+  source = "./modules/sql-database"
+  database_name = "db1"
   database_version = "MYSQL_5_7"
-  region = "us-central"
-  project = module.project1.project_id
-  settings {
-    tier = "db-f1-micro"
-  }
-
-  depends_on = [
-    module.project1
+  region = "us-central1"
+  project_id = module.project1.project_id
+  tier = "db-f1-micro"
+  readwrite_users = [
+    "vincetse",
   ]
 }
 
-resource "google_sql_database" "app1_db" {
-  name = "app1-db"
-  instance = google_sql_database_instance.app1_db.name
-  project = module.project1.project_id
+output "db1_public_ip_address" {
+  value = module.db1.public_ip_address
+}
 
-  depends_on = [
-    module.project1
-  ]
+output "db1_private_ip_address" {
+  value = module.db1.private_ip_address
 }

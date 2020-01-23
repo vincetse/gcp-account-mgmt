@@ -1,6 +1,6 @@
 resource "random_id" "project_id" {
   prefix      = "${var.project_id_prefix}-"
-  byte_length = 4
+  byte_length = 2
 }
 
 resource "google_project" "proj" {
