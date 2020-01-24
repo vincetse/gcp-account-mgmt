@@ -70,22 +70,32 @@ output "project1_id" {
 
 ################################################################################
 # webapp with postgresql
-module "db1" {
-  source = "./modules/sql-database"
-  database_name = "db1"
-  database_version = "MYSQL_5_7"
-  region = "us-central1"
+module "webapp" {
+  source = "./modules/webapp"
+  app_name = "webapp1"
   project_id = module.project1.project_id
-  tier = "db-f1-micro"
-  readwrite_users = [
-    "vincetse",
-  ]
+  region = "us-central1"
+  database_version = "MYSQL_5_7"
+  database_tier = "db-f1-micro"
 }
 
-output "db1_public_ip_address" {
-  value = module.db1.public_ip_address
-}
 
-output "db1_private_ip_address" {
-  value = module.db1.private_ip_address
-}
+#module "db1" {
+#  source = "./modules/sql-database"
+#  database_name = "db1"
+#  database_version = "MYSQL_5_7"
+#  region = "us-central1"
+#  project_id = module.project1.project_id
+#  tier = "db-f1-micro"
+#  readwrite_users = [
+#    "vincetse",
+#  ]
+#}
+#
+#output "db1_public_ip_address" {
+#  value = module.db1.public_ip_address
+#}
+#
+#output "db1_private_ip_address" {
+#  value = module.db1.private_ip_address
+#}
