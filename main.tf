@@ -70,10 +70,10 @@ output "project_common_infra_id" {
 # project
 #
 # Create a project by product, and assign it to the relevant Billing Account.
-module "project1" {
+module "project_service1" {
   source             = "./modules/project"
-  project_name       = "User Portal"
-  project_id_prefix  = "user-portal"
+  project_name       = "service1"
+  project_id_prefix  = "service1"
   parent_id          = google_folder.sandbox.name
   billing_account_id = data.google_billing_account.free_trial.id
   readonly_users = [
@@ -84,6 +84,6 @@ module "project1" {
   ]
 }
 
-output "project1_id" {
-  value = module.project1.project_id
+output "service1_project_id" {
+  value = module.project_service1.project_id
 }
