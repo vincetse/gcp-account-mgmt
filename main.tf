@@ -47,13 +47,33 @@ resource "google_folder" "sandbox" {
 
 
 ################################################################################
+# Common infrastructure project
+module "project_common_infra" {
+  source             = "./modules/project"
+  project_name       = "common-infra"
+  project_id_prefix  = "common-infra"
+  parent_id          = google_folder.sandbox.name
+  billing_account_id = data.google_billing_account.free_trial.id
+  readonly_users = [
+    "user:vincetse@thelazyenginerd.github.io",
+  ]
+  readwrite_users = [
+  ]
+}
+
+output "project_common_infra_id" {
+  value = module.project_common_infra.project_id
+}
+
+
+################################################################################
 # project
 #
 # Create a project by product, and assign it to the relevant Billing Account.
 module "project1" {
   source             = "./modules/project"
-  project_name       = "My GAE"
-  project_id_prefix  = "my-gae"
+  project_name       = "User Portal"
+  project_id_prefix  = "user-portal"
   parent_id          = google_folder.sandbox.name
   billing_account_id = data.google_billing_account.free_trial.id
   readonly_users = [
@@ -67,35 +87,3 @@ module "project1" {
 output "project1_id" {
   value = module.project1.project_id
 }
-
-################################################################################
-# webapp with postgresql
-module "webapp" {
-  source = "./modules/webapp"
-  app_name = "webapp1"
-  project_id = module.project1.project_id
-  region = "us-central1"
-  database_version = "MYSQL_5_7"
-  database_tier = "db-f1-micro"
-}
-
-
-#module "db1" {
-#  source = "./modules/sql-database"
-#  database_name = "db1"
-#  database_version = "MYSQL_5_7"
-#  region = "us-central1"
-#  project_id = module.project1.project_id
-#  tier = "db-f1-micro"
-#  readwrite_users = [
-#    "vincetse",
-#  ]
-#}
-#
-#output "db1_public_ip_address" {
-#  value = module.db1.public_ip_address
-#}
-#
-#output "db1_private_ip_address" {
-#  value = module.db1.private_ip_address
-#}
